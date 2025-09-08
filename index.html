@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curiosity-driven exploration of Flow Lenia universes: Bootstrapping open-ended evolution</title>
+
+    <style>
+        :root {
+            --primary-color: #3a7ca5;
+            --secondary-color: #2f6690;
+            --accent-color: #d9dcd6;
+            --text-color: #333;
+            --light-text: #666;
+            --background: #f9f9f9;
+            --card-bg: #fff;
+            --section-spacing: 2.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background);
+            padding: 0;
+            max-width: 100%;
+            overflow-x: hidden;
+            text-align: justify;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            position: relative;
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: var(--section-spacing);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #333;
+        }
+
+        /* Background layer without image */
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: none;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        /* Dark gradient overlay for better text readability */
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(47, 102, 144, 0.85), rgba(0, 0, 0, 0.7));
+            z-index: 1;
+        }
+
+        header .container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+        }
+
+        .author-placeholder {
+            font-style: italic;
+            color: #eee;
+            margin-bottom: 1rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .author-placeholder a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .author-placeholder a:hover {
+            text-decoration: underline;
+            color: var(--accent-color);
+        }
+
+        .author-placeholder a .external-link-icon {
+            width: 0.8em;
+            height: 0.8em;
+            margin-left: 0.25em;
+            vertical-align: -0.05em;
+            fill: currentColor;
+        }
+
+        section {
+            margin-bottom: var(--section-spacing);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .img-container {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s;
+        }
+
+        .img-container:hover img {
+            transform: scale(1.03);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.4rem;
+            align-items: stretch;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .video-container {
+            position: relative;
+            background-color: rgba(58, 124, 165, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            max-width: 320px;
+            justify-self: center;
+        }
+
+        .video-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 100%;
+            /* 1:1 aspect ratio (square) */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            object-fit: cover;
+        }
+
+        .video-description {
+            padding: 1rem;
+            line-height: 1.6;
+            border-top: 1px solid #eee;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            color: #555;
+            font-style: italic;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .video-container:hover .video-placeholder {
+            background-color: #e8e8e8;
+        }
+
+        .tool-preview {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .tool-preview:hover {
+            border-color: var(--primary-color);
+        }
+
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .key-points {
+            list-style-type: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .key-points li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .key-points li:before {
+            content: "•";
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: absolute;
+            left: 0;
+        }
+
+        .abstract {
+            font-style: italic;
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            background-color: rgba(58, 124, 165, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .tool-highlight {
+            background: linear-gradient(135deg, rgba(58, 124, 165, 0.1), rgba(47, 102, 144, 0.1));
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 1rem 0 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .tool-highlight-content {
+            flex: 1;
+        }
+
+        .highlight-box {
+            background-color: rgba(58, 124, 165, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-top: 3px solid var(--primary-color);
+        }
+
+        .highlight-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            display: inline;
+            cursor: help;
+            color: var(--primary-color);
+            text-decoration: underline;
+            text-decoration-style: dashed;
+        }
+
+        .tooltip-content {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(51, 51, 51, 0.95);
+            color: white;
+            text-align: left;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            width: 250px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .tooltip:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltip-content::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: rgba(51, 51, 51, 0.95) transparent transparent transparent;
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: loading-shimmer 1.5s infinite;
+        }
+
+        @keyframes loading-shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.6s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Lazy Loading Images */
+        img[data-src] {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        img.loaded {
+            opacity: 1;
+        }
+
+        /* Error States */
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Performance Optimizations */
+        .video-container video {
+            will-change: transform;
+        }
+
+        .expandable-content {
+            will-change: max-height;
+        }
+
+        /* Accessibility Enhancements */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .loading::after {
+                animation: none;
+            }
+
+            .fade-in {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+
+            .tooltip-content {
+                transition: none;
+            }
+        }
+
+        /* High Contrast Mode Support */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary-color: #000080;
+                --secondary-color: #000060;
+                --text-color: #000;
+                --background: #fff;
+                --card-bg: #fff;
+            }
+
+            .tooltip-content {
+                background-color: #000;
+                color: #fff;
+                border: 2px solid #fff;
+            }
+
+            .video-container {
+                border: 2px solid #000;
+            }
+        }
+
+        /* Focus Management */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Enhanced focus indicators */
+        :focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Skip link styling */
+        .skip-link:focus {
+            outline: 3px solid #fff;
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .tooltip-content {
+                width: 200px;
+                font-size: 0.8rem;
+            }
+
+            .citation-buttons {
+                flex-direction: column;
+            }
+
+            .flow-step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            /* Mobile Performance Optimizations */
+            .video-container {
+                will-change: auto;
+                width: 100%;
+                max-width: none;
+            }
+
+            .expandable-content {
+                will-change: auto;
+            }
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <!-- Skip Navigation -->
+    <style>
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 0 0 4px 4px;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header role="banner">
+        <div class="container">
+            <h1 style="text-align: center;">Exploring Flow-Lenia Universes with a Curiosity-driven AI Scientist: Discovering Diverse Ecosystem Dynamics</h1>
+            <div class="author-placeholder">
+                <a href="https://thomick.github.io" target="_blank">Thomas Michel<svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 12v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>,
+                Marko Cvjetko,
+                <a href="https://reytuag.github.io/gautier-hamon/" target="_blank">Gautier Hamon<svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 12v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>,
+                <a href="http://www.pyoudeyer.com/" target="_blank">Pierre-Yves Oudeyer<svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 12v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>,
+                <a href="https://clement-moulin-frier.github.io/" target="_blank">Clément Moulin-Frier<svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 12v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>
+                <br>
+                <span style="font-size: 0.9em; color: #ddd;">Centre Inria de l'Université de Bordeaux</span>
+            </div>
+        </div>
+    </header>
+
+    <main id="main" class="container" role="main">
+        <section>
+            <article class="card">
+                <div class="abstract">
+                    <p>We present a method for automated discovery of system-level dynamics in Flow-Lenia—a continuous cellular automaton
+                        with mass conservation and parameter localization—using an AI scientist system based on <span
+                            class="tooltip" role="button" aria-describedby="imgep-tooltip" tabindex="0">Intrinsically Motivated Goal Exploration Processes (IMGEP)<span class="tooltip-content" id="imgep-tooltip" role="tooltip">A family
+                                of diversity search algorithms that autonomously set goals and explore parameter spaces to discover diverse
+                                behaviors</span></span>. Exploring full ecosystemic simulations is crucial for understanding the emergence
+                        of complex collective behaviors that individual pattern analysis cannot capture, such as competition, cooperation,
+                        and environmental adaptation. While previous applications of IMGEPs, a family of diversity search algorithms,
+                        focused on automated exploration of self-organized individual patterns or behavior, we extend this methodology to
+                        explore system-level dynamics. Our implementation evaluates systems using simulation-wide metrics (e.g. <span
+                            class="tooltip">evolutionary activity<span class="tooltip-content">A measure of how much genetic change occurs
+                                in a system over time, indicating the potential for open-ended evolution</span></span>, <span
+                            class="tooltip">compression-based complexity<span class="tooltip-content">A complexity measure based on how much
+                                data can be compressed, reflecting the amount of structure and patterns in the system</span></span>, and
+                        <span class="tooltip">multi-scale entropy<span class="tooltip-content">An entropy measure that captures the
+                                predictability of a system across different temporal and spatial scales</span></span>) to guide exploration
+                        toward diverse evolutionary regimes. Results show IMGEPs discover significantly more diverse dynamics than random
+                        search, revealing complex self-organized ecological interactions in Flow-Lenia. We complement automated discovery
+                        with an interactive exploration tool, creating an effective human-AI collaborative workflow for scientific
+                        investigation. Though demonstrated specifically with Flow-Lenia, this methodology provides a framework potentially
+                        applicable to other parameterizable complex systems where understanding emergent collective properties is of
+                        interest.</p>
+                </div>
+            </article>
+        </section>
+
+        <section aria-labelledby="videos-heading">
+            <article class="card">
+                <h2 id="videos-heading">Video Demonstrations</h2>
+                
+
+
+
+                <div class="section-text" style="margin: 3rem 0;">
+                    <h3>Controling the Population Size</h3>
+                    <p>We train goal-conditioned reinforcement learning agents to maintain the grid sum of living cells at a target value.</p>
+                </div>
+
+                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos/population_control_intermediate.mp4" type="video/mp4">
+                                <p>Intermediate target population size. <a href="videos/glider_good.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p>Steering an Orbium towards bottom-right in a noisy environment</p>
+                        </figcaption>
+                    </figure>
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos/high_mass.mp4" type="video/mp4">
+                                <p>High target population size. <a href="videos/population_control_intermediate.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p>Resulting dynamics when the agent's actions are muted. The random perturbations quickly converge into a Turing pattern</p>
+                        </figcaption>
+                    </figure>
+                </div>
+
+
+                <div class="section-text" style="margin: 3rem 0;">
+                    <h4>Discovery of Novel Self-Organizing Patterns</h4>
+                    <p>Agent's tasked with maintaining a small amount of living cells discover self-sustaining spatially localized patterns.</p>
+                </div>
+
+                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos/population_ring.mp4" type="video/mp4">
+                                <p>A static ring. <a href="videos/glider_noise.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p></p>
+                        </figcaption>
+                    </figure>
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos/population_rotator.mp4" type="video/mp4">
+                                <p>A rotator. <a href="videos/glider_good_2.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p></p>
+                        </figcaption>
+                    </figure>
+                </div>
+
+
+                <h3 id="videos-heading">Steering Orbiums</h3>
+                <p>We train agents to direct Orbiums towards a target direction. The trained agent typically chaotically guides the pattern
+                towards the target direction, until it finds a state that will converge into a stable, well rotated Orbium. </p>
+
+                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos/glider_good_2.mp4" type="video/mp4">
+                                <p>Your browser does not support the video tag. <a href="videos/population_ring.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p></p>
+                        </figcaption>
+                    </figure>
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos/glider_good.mp4" type="video/mp4">
+                                <p>Your browser does not support the video tag. <a href="videos/population_control_intermediate.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p></p>
+                        </figcaption>
+                    </figure>
+                </div>
+
+                <div class="section-text" style="margin: 3rem 0;">
+                    <h3>Adaptive Control in Novel, Noisy Environments</h3>
+                    <p>Agents trained to steer Orbiums generalize to environments with random perturbations, successfully completing the task despite never encountering such conditions during training.</p>
+                </div>
+
+                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos/glider_noise.mp4" type="video/mp4">
+                                <p>Your browser does not support the video tag. <a href="videos/glider_good.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p>Steering an Orbium towards bottom-right in a noisy environment</p>
+                        </figcaption>
+                    </figure>
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos/agent_muted.mp4" type="video/mp4">
+                                <p>Your browser does not support the video tag. <a href="videos/population_control_intermediate.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p>Resulting dynamics when the agent's actions are muted. The random perturbations quickly converge into a Turing pattern</p>
+                        </figcaption>
+                    </figure>
+                </div>
+            </article>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.playbackRate = 2; // Increase playback speed by 50%
+            });
+        });
+    </script>
+</body>
+
+</html>
