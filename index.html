@@ -117,6 +117,7 @@
             color: #eee;
             margin-bottom: 1rem;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-size: 1.2rem;
         }
 
         .author-placeholder a {
@@ -221,7 +222,7 @@
             flex-direction: column;
             height: 100%;
             width: 100%;
-            max-width: 320px;
+            max-width: 360px;
             justify-self: center;
         }
 
@@ -379,6 +380,19 @@
             font-weight: bold;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
+        }
+
+        /* Code snippet styling */
+        .code-block {
+            background: #f5f7fb;
+            border: 1px solid #e6e8ee;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            color: #222;
         }
 
         /* Tooltip Styles */
@@ -624,7 +638,12 @@
                 <a href="http://www.pyoudeyer.com/" target="_blank">Pierre-Yves Oudeyer<svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 12v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>,
                 <a href="https://clement-moulin-frier.github.io/" target="_blank">Clément Moulin-Frier<svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 12v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>
                 <br>
-                <span style="font-size: 0.9em; color: #ddd;">Centre Inria de l'Université de Bordeaux</span>
+                <span style="font-size: 1.1rem; color: #ddd;">Flowers AI & CogSci Lab, Inria, France</span>
+                <br>
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#" class="btn" style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">Paper (coming soon)</a>
+                    <a href="#" class="btn" style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">Code (coming soon)</a>
+                </div>
             </div>
         </div>
     </header>
@@ -632,141 +651,228 @@
     <main id="main" class="container" role="main">
         <section>
             <article class="card">
-                <div class="abstract">
-                    <p>Autotelic AI algorithms, which pursue self-generated goals, have proven to be effective as automated discovery assistants in cellular automata (CAs). Previous work in this domain focused on algorithms which produce diverse behaviors by setting the automaton's initial conditions. Here, we extend these methods beyond initial-condition search and adapt them to systems that support sequences of closed-loop interventions. Using Lenia as a test environment, we train goal-conditioned reinforcement learning (RL) agents to perform targeted interventions during the system's evolution, guiding it towards desired states. The resulting agent behaviors are robust and diverse, demonstrating the potential of closed-loop interaction for discovery and control. Furthermore, we show that goal-conditioned RL agents performing interventions can discover novel self-organising patterns and generalize to previously unseen and noisy environments.</p>
-                </div>
+                <h2 id="summary">Summary</h2>
+                <p>Cellular automata (CAs) generate rich, lifelike dynamics but are often highly sensitive to initial conditions.
+                     Most AI-assisted discovery methods for exploring complexity in CAs have operated in an open-loop manner—setting only 
+                     the initial state—which tends to yield brittle phenomena. We motivate a shift toward closed-loop discovery, where algorithms
+                      can intervene during system evolution to stabilize and guide dynamics. To this end, we develop a 
+                      framework based on goal-conditioned reinforcement learning agents that can guide CA evolution
+                      by strategically adding or removing living cells inbetween CA updates.</p>
+
+                <p>
+                     We evaluate our approach in two environments built 
+                    on <a href="https://arxiv.org/abs/1812.05433" target="_blank" class="link">Lenia</a>, 
+                    a continuous extension of the Game of Life:
+                     (1) steering Orbiums towards target directions, and (2) regulating the global amount of living cells. 
+                     We observe that the trained agents solve the tasks by relying on the intrinsic dynamics of the environment 
+                     and discover self-sustaining patterns that were not present in initial training data. Furthermore, the agents 
+                     transfer well to novel, noisy environments.
+                     Together, these results extend AI-assisted discovery beyond initial-condition search, with potential real-world applications 
+                     in discovery and control of 
+                     "<a href="https://www.research.ed.ac.uk/en/publications/synthetic-morphology-with-agential-materials" target="_blank" class="link">agential 
+                        materials</a>".</p>
+
+                <div style="height: 2rem;"></div>
+                <h2 id="method">Method</h2>
+                <figure aria-label="Architecture figure" style="display: flex; flex-direction: column; align-items: center; margin: 2rem auto;">
+                    <img src="figures/fig.png" alt="Architecture of the goal-conditioned RL system" loading="lazy" style="max-width: 90%; height: auto;">
+                    <figcaption class="video-description" style="margin-top: 1rem;">
+                        <p>We frame open-loop discovery as a reinforcement learning problem in 
+                            which each episode step alternates between the agent’s intervention and a CA update. 
+                            The agent observes the grid state and reward, then selects a location to add or remove a small number of living
+                             cells, or choose to not act.In certain experiments, actions incur a cost, encouraging the agent to balance intervention with restraint. 
+                             We believe this design fosters reliance on the environment’s intrinsic dynamics rather than excessive control.</p>
+                        
+                    </figcaption>
+                </figure>
+
             </article>
         </section>
 
         <section aria-labelledby="videos-heading">
             <article class="card">
-                <h2 id="videos-heading">Video Demonstrations</h2>
-                
+               
+                <h2 id="videos-heading">Steering Orbiums</h2>
+                <p>We train agents to direct Orbiums towards a target direction. The glider's initial position, direction, and the target direction are randomly sampled for each episode. 
+                <p>The legend below explains what you'll see in the videos—the X markers and arrows indicate the agent's actions and current progress, respectively.
+                </p>
+                <div class="section-text" style="margin: 2rem 0;">
+                    <p>
+                       
+                    </p>
+                    <div class="video-description" aria-label="Symbol legend" style="display: flex; flex-direction: column; gap: 0.8rem; align-items: flex-start;">
+                        <span style="display:inline-flex; align-items:center; gap:0.4rem;">
+                            <svg width="62" height="22" viewBox="0 0 60 24" role="img" aria-label="current direction (yellow arrow)">
+                                <defs>
+                                    <marker id="arrowhead-yellow-legend" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" fill="#ffcc00">
+                                        <path d="M0,0 L0,6 L6,3 z"></path>
+                                    </marker>
+                                </defs>
+                                <line x1="4" y1="22" x2="56" y2="12" stroke="#ffcc00" stroke-width="3" marker-end="url(#arrowhead-yellow-legend)"></line>
+                            </svg>
+                            <span>current direction</span>
+                        </span>
 
+                        <span style="display:inline-flex; align-items:center; gap:0.4rem;">
+                            <svg width="62" height="22" viewBox="0 0 60 24" role="img" aria-label="target direction (blue arrow)">
+                                <defs>
+                                    <marker id="arrowhead-blue-legend" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" fill="#2f6690">
+                                        <path d="M0,0 L0,6 L6,3 z"></path>
+                                    </marker>
+                                </defs>
+                                <line x1="4" y1="22" x2="56" y2="12" stroke="#2f6690" stroke-width="3" marker-end="url(#arrowhead-blue-legend)"></line>
+                            </svg>
+                            <span>target direction</span>
+                        </span>
 
+                        <span style="display:inline-flex; align-items:center; gap:0.4rem;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" role="img" aria-label="positive intervention (red X)">
+                                <line x1="4" y1="4" x2="20" y2="20" stroke="#cc0000" stroke-width="3" stroke-linecap="round"></line>
+                                <line x1="20" y1="4" x2="4" y2="20" stroke="#cc0000" stroke-width="3" stroke-linecap="round"></line>
+                            </svg>
+                            <span>positive intervention (adding living cells)</span>
+                        </span>
+
+                        <span style="display:inline-flex; align-items:center; gap:0.4rem;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" role="img" aria-label="negative intervention (green X)">
+                                <line x1="4" y1="4" x2="20" y2="20" stroke="#1a7f37" stroke-width="3" stroke-linecap="round"></line>
+                                <line x1="20" y1="4" x2="4" y2="20" stroke="#1a7f37" stroke-width="3" stroke-linecap="round"></line>
+                            </svg>
+                            <span>negative intervention (removing living cells)</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos_new/agent_no_penalty.mp4" type="video/mp4">
+                                <p>Your browser does not support the video tag. <a href="videos/population_ring.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p>Training with no action cost. The agent achieves the goal by constantly perturbing the state, breaking consistency of the glider.</p>
+                        </figcaption>
+                    </figure>
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos_new/agent_penalty.mp4" type="video/mp4">
+                                <p>Your browser does not support the video tag. <a href="videos/population_control_intermediate.mp4">Download the video</a> instead.</p>
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p>Training with action costs. Compared to the previous experiment, the agent acts less frequently, and eventually constructs a correctly oriented glider.</p>
+                        </figcaption>
+                    </figure>
+                </div>
 
                 <div class="section-text" style="margin: 3rem 0;">
-                    <h3>Controling the Population Size</h3>
-                    <p>We train goal-conditioned reinforcement learning agents to maintain the grid sum of living cells at a target value.</p>
+                    <h4>Adaptive Control in Novel, Noisy Environments</h4>
+                    <p>Agents trained to steer Orbiums generalize to environments with random perturbations, completing the task despite never encountering such conditions during training.</p>
                 </div>
 
                 <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
                     <figure class="video-container">
                         <div class="video-wrapper">
                             <video controls autoplay loop muted>
-                                <source src="videos/population_control_intermediate.mp4" type="video/mp4">
+                                <source src="videos_new/noisy.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p>Maintaining and steering an Orbium in a noisy environment.</p>
+                        </figcaption>
+                    </figure>
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos_new/noisy_no_agent.mp4" type="video/mp4">
+                                                           </video>
+                        </div>
+                        <figcaption class="video-description">
+                            <p>Resulting dynamics in a noisy environment when the agent's actions are muted. The random perturbations quickly drive the system into an exploding, Turing pattern.</p>
+                        </figcaption>
+                    </figure>
+                </div>
+
+                 
+
+
+
+                <div class="section-text" style="margin: 3rem 0;">
+                    <h2>Controling the Living Cell Count</h2>
+                    <p>In the examples below, RL agents are tasked with maintaining the sum of living cells at a given target value. Similar to the first experiment, 
+                        the initial state consists of randomly sampled living cell clusters and the desired living cell count.
+
+                </div>
+                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos_new/mass_agent.mp4" type="video/mp4">
                                 <p><a href="videos/glider_good.mp4">Download the video</a> instead.</p>
                             </video>
                         </div>
                         <figcaption class="video-description">
-                            <p>Intermediate target population size. </p>
+                            <p>Behavior when the target living cell count is high. </p>
                         </figcaption>
                     </figure>
                     <figure class="video-container">
                         <div class="video-wrapper">
                             <video controls autoplay loop muted>
-                                <source src="videos/high_mass.mp4" type="video/mp4">
-                                <p>High target population size. <a href="videos/population_control_intermediate.mp4">Download the video</a> instead.</p>
+                                <source src="videos_new/mass_agent_intermediate.mp4" type="video/mp4">
+                                <p><a href="videos/glider_good.mp4">Download the video</a> instead.</p>
                             </video>
                         </div>
                         <figcaption class="video-description">
-                            <p>High target population size. </p>
+                            <p>Behavior with an intermediate target living cell count. </p>
                         </figcaption>
-                    </figure>
-                </div>
-
-
-                <div class="section-text" style="margin: 3rem 0;">
-                    <h3>Discovery of Novel Self-Organizing Patterns</h3>
-                    <p>Agent's tasked with maintaining a small amount of living cells discover self-sustaining spatially localized patterns.</p>
-                </div>
-
-                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
-                    <figure class="video-container">
-                        <div class="video-wrapper">
-                            <video controls autoplay loop muted>
-                                <source src="videos/population_ring.mp4" type="video/mp4">
-                                <p>A static ring. <a href="videos/glider_noise.mp4">Download the video</a> instead.</p>
-                            </video>
-                        </div>
-                        <figcaption class="video-description">
-                            <p>A static ring. </p>
-                        </figcaption>
-                    </figure>
-                    <figure class="video-container">
-                        <div class="video-wrapper">
-                            <video controls autoplay loop muted>
-                                <source src="videos/population_rotator.mp4" type="video/mp4">
-                                <p>A rotator. <a href="videos/glider_good_2.mp4">Download the video</a> instead.</p>
-                            </video>
-                        </div>
-                        <figcaption class="video-description">
-                            <p>A rotator.</p>
-                        </figcaption>
-                    </figure>
-                </div>
-
-
-                <h3 id="videos-heading">Steering Orbiums</h3>
-                <p>We train agents to direct Orbiums towards a target direction. The trained agent typically chaotically guides the pattern
-                towards the target direction, until it finds a state that will converge into a stable, well rotated Orbium. </p>
-
-                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
-                    <figure class="video-container">
-                        <div class="video-wrapper">
-                            <video controls autoplay loop muted>
-                                <source src="videos/glider_good_2.mp4" type="video/mp4">
-                                <p>Your browser does not support the video tag. <a href="videos/population_ring.mp4">Download the video</a> instead.</p>
-                            </video>
-                        </div>
-                    </figure>
-                    <figure class="video-container">
-                        <div class="video-wrapper">
-                            <video controls autoplay loop muted>
-                                <source src="videos/glider_good.mp4" type="video/mp4">
-                                <p>Your browser does not support the video tag. <a href="videos/population_control_intermediate.mp4">Download the video</a> instead.</p>
-                            </video>
-                        </div>
                     </figure>
                 </div>
 
                 <div class="section-text" style="margin: 3rem 0;">
-                    <h3>Adaptive Control in Novel, Noisy Environments</h3>
-                    <p>Agents trained to steer Orbiums generalize to environments with random perturbations, successfully completing the task despite never encountering such conditions during training.</p>
+                    <h4>Self-Sustaining Patterns</h4>
+                    <p>Interestingly, <b>the agents learn to construct self-sustaining patterns that have the desired amount of living cells.</b> 
+                        These patterns were not present in the initial states of training environments, and have been 
+                        fully discovered by the agents while interacting with the environemnt.</p>
                 </div>
 
                 <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
                     <figure class="video-container">
                         <div class="video-wrapper">
                             <video controls autoplay loop muted>
-                                <source src="videos/glider_noise.mp4" type="video/mp4">
-                                <p>Your browser does not support the video tag. <a href="videos/glider_good.mp4">Download the video</a> instead.</p>
+                                <source src="videos_new/ring.mp4" type="video/mp4">
+                                <p>The agent constructs a static ring.<a href="videos/population_control_intermediate.mp4">Download the video</a> instead.</p>
                             </video>
                         </div>
                         <figcaption class="video-description">
-                            <p>Steering an Orbium towards bottom-right in a noisy environment</p>
+                            <p>The agent constructs a static ring. </p>
                         </figcaption>
                     </figure>
                     <figure class="video-container">
                         <div class="video-wrapper">
                             <video controls autoplay loop muted>
-                                <source src="videos/agent_muted.mp4" type="video/mp4">
-                                <p>Your browser does not support the video tag. <a href="videos/population_control_intermediate.mp4">Download the video</a> instead.</p>
+                                <source src="videos_new/rotator.mp4" type="video/mp4">
+                                <p>The agent constructs a dynamic rotating pattern.<a href="videos/glider_noise.mp4">Download the video</a> instead.</p>
                             </video>
                         </div>
                         <figcaption class="video-description">
-                            <p>Resulting dynamics in a noisy environment when the agent's actions are muted. The random perturbations quickly drive the system into a Turing pattern</p>
+                            <p>The agent constructs a dynamic rotating pattern. </p>
                         </figcaption>
                     </figure>
                 </div>
+
+                <div style="height: 2rem;"></div>
+
             </article>
+            
         </section>
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const videos = document.querySelectorAll('video');
             videos.forEach(video => {
-                video.playbackRate = 2; // Increase playback speed by 50%
+                video.playbackRate = 1.2; // Play at half speed
             });
         });
     </script>
