@@ -37,7 +37,7 @@
 
         .container {
             width: 90%;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 2rem 1rem;
         }
@@ -638,10 +638,10 @@
                 <a href="http://www.pyoudeyer.com/" target="_blank">Pierre-Yves Oudeyer<svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 12v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>,
                 <a href="https://clement-moulin-frier.github.io/" target="_blank">Clément Moulin-Frier<svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 12v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>
                 <br>
-                <span style="font-size: 1.1rem; color: #ddd;">Flowers AI & CogSci Lab, Inria, France</span>
+                <span style="font-size: 1.1rem; color: #ddd;">Flowers AI & CogSci Lab, Inria, University of Bordeaux</span>
                 <br>
                 <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="#" class="btn" style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">Paper (coming soon)</a>
+                    <a href="lba.pdf" class="btn" target="_blank">Paper</a>
                     <a href="#" class="btn" style="opacity: 0.7; cursor: not-allowed; pointer-events: none;">Code (coming soon)</a>
                 </div>
             </div>
@@ -654,19 +654,22 @@
                 <h2 id="summary">Summary</h2>
                 <p>Cellular automata (CAs) generate rich, lifelike dynamics but are often highly sensitive to initial conditions.
                      Most AI-assisted discovery methods for exploring complexity in CAs have operated in an open-loop manner—setting only 
-                     the initial state—which tends to yield brittle phenomena. We motivate a shift toward closed-loop discovery, where algorithms
+                     the initial state—which tends to yield brittle phenomena. We motivate a shift towards closed-loop discovery, where algorithms
                       can intervene during system evolution to stabilize and guide dynamics. To this end, we develop a 
-                      framework based on goal-conditioned reinforcement learning agents that can guide CA evolution
-                      by strategically adding or removing living cells inbetween CA updates.</p>
+                      framework based on goal-conditioned reinforcement learning agents that can guide CA evolution through a 
+                      series of minimal interventions, such as adding or removing cell values inbetween CA updates.</p>
 
                 <p>
                      We evaluate our approach in two environments built 
                     on <a href="https://arxiv.org/abs/1812.05433" target="_blank" class="link">Lenia</a>, 
                     a continuous extension of the Game of Life:
-                     (1) steering Orbiums towards target directions, and (2) regulating the global amount of living cells. 
-                     We observe that the trained agents solve the tasks by relying on the intrinsic dynamics of the environment 
-                     and discover self-sustaining patterns that were not present in initial training data. Furthermore, the agents 
-                     transfer well to novel, noisy environments.
+                     (1) steering orbiums (self-organizing moving patterns akin to gliders in Game of Life) towards target directions, and (2) 
+                     maintaining the state population (sum of the CA grid) at a given target value. 
+                     The trained agents learn successful policies in both environments, and have the ability to utilize the intrinsic
+                      dynamics of the environment to
+                     their advantage. Furthermore, the agents discovered self-sustaining patterns that were not present in initial
+                      training data, and their policies
+                     transfer well to noisy environments.
                      Together, these results extend AI-assisted discovery beyond initial-condition search, with potential real-world applications 
                      in discovery and control of 
                      "<a href="https://www.research.ed.ac.uk/en/publications/synthetic-morphology-with-agential-materials" target="_blank" class="link">agential 
@@ -674,14 +677,16 @@
 
                 <div style="height: 2rem;"></div>
                 <h2 id="method">Method</h2>
-                <figure aria-label="Architecture figure" style="display: flex; flex-direction: column; align-items: center; margin: 2rem auto;">
-                    <img src="figures/fig.png" alt="Architecture of the goal-conditioned RL system" loading="lazy" style="max-width: 90%; height: auto;">
-                    <figcaption class="video-description" style="margin-top: 1rem;">
-                        <p>We frame open-loop discovery as a reinforcement learning problem in 
-                            which each episode step alternates between the agent’s intervention and a CA update. 
-                            The agent observes the grid state and reward, then selects a location to add or remove a small number of living
-                             cells, or choose to not act.In certain experiments, actions incur a cost, encouraging the agent to balance intervention with restraint. 
-                             We believe this design fosters reliance on the environment’s intrinsic dynamics rather than excessive control.</p>
+                <figure aria-label="Architecture figure" style="display: flex; flex-direction: column; align-items: center; margin: 3rem auto;">
+                    <img src="figures/fig2.png" alt="Architecture of the goal-conditioned RL system" loading="lazy" style="width: 90%; max-width: 1000px; height: auto;">
+                    <figcaption class="video-description" style="margin-top: 1.5rem;">
+                        <p>We frame open-loop discovery as a reinforcement learning problem, where each step of an episode 
+                            alternates between the agent’s intervention and CA updates. At each step, the agent 
+                            observes both the grid state and a target goal, then chooses an action: it may modify a small number of 
+                            cells by adding or removing values around a specific location, or it may opt to take no action. Afterward, the 
+                            CA rules are applied to evolve the system. In some experiments, actions carry an explicit cost, encouraging 
+                            the agent to balance intervention with restraint. This design promotes reliance on the CA’s intrinsic 
+                            dynamics rather than excessive external control.</p>
                         
                     </figcaption>
                 </figure>
@@ -693,7 +698,7 @@
             <article class="card">
                
                 <h2 id="videos-heading">Steering Orbiums</h2>
-                <p>We train agents to direct Orbiums towards a target direction. The glider's initial position, direction, and the target direction are randomly sampled for each episode. 
+                <p>We train agents to direct orbiums towards a target direction. The glider's initial position, direction, and the target direction are randomly sampled for each episode. 
                 <p>The legend below explains what you'll see in the videos—the X markers and arrows indicate the agent's actions and current progress, respectively.
                 </p>
                 <div class="section-text" style="margin: 2rem 0;">
@@ -730,7 +735,7 @@
                                 <line x1="4" y1="4" x2="20" y2="20" stroke="#cc0000" stroke-width="3" stroke-linecap="round"></line>
                                 <line x1="20" y1="4" x2="4" y2="20" stroke="#cc0000" stroke-width="3" stroke-linecap="round"></line>
                             </svg>
-                            <span>positive intervention (adding living cells)</span>
+                            <span>positive intervention (adding a positive value to the cells)</span>
                         </span>
 
                         <span style="display:inline-flex; align-items:center; gap:0.4rem;">
@@ -738,7 +743,7 @@
                                 <line x1="4" y1="4" x2="20" y2="20" stroke="#1a7f37" stroke-width="3" stroke-linecap="round"></line>
                                 <line x1="20" y1="4" x2="4" y2="20" stroke="#1a7f37" stroke-width="3" stroke-linecap="round"></line>
                             </svg>
-                            <span>negative intervention (removing living cells)</span>
+                            <span>negative intervention (adding a negative value to the cells)</span>
                         </span>
                     </div>
                 </div>
@@ -766,10 +771,11 @@
                         </figcaption>
                     </figure>
                 </div>
-
-                <div class="section-text" style="margin: 3rem 0;">
+                <div style="height: 3rem;"></div>
+                <div class="section-text" style="margin: 2rem 0;">
                     <h4>Adaptive Control in Novel, Noisy Environments</h4>
-                    <p>Agents trained to steer Orbiums generalize to environments with random perturbations, completing the task despite never encountering such conditions during training.</p>
+                    <p>Agents trained to steer orbiums generalize to environments with random perturbations, 
+                        completing the task despite never encountering such conditions during training.</p>
                 </div>
 
                 <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
@@ -780,7 +786,7 @@
                             </video>
                         </div>
                         <figcaption class="video-description">
-                            <p>Maintaining and steering an Orbium in a noisy environment.</p>
+                            <p>Maintaining and steering an orbium in a noisy environment.</p>
                         </figcaption>
                     </figure>
                     <figure class="video-container">
@@ -800,10 +806,37 @@
 
 
                 <div class="section-text" style="margin: 3rem 0;">
-                    <h2>Controling the Living Cell Count</h2>
-                    <p>In the examples below, RL agents are tasked with maintaining the sum of living cells at a given target value. Similar to the first experiment, 
-                        the initial state consists of randomly sampled living cell clusters and the desired living cell count.
+                    <h2>Controling the State Population</h2>
+                    <p>The examples below an environment in which the agents are tasked to maintain the population size (sum of the CA grid) at a given target value.
+                        The initial state and the target population size are randomly sampled for each episode.</p>
+                </div>
 
+                <div class="section-text" style="margin: 3rem 0;">
+                    <h4>Evolution without Intervention</h4>
+                    <p>Without an agent  guiding the system, it is typically evolves into a Turing pattern or an empty grid, as shown below.</p>
+                    <div class="section-text" style="margin: 2rem 0;">
+                </div>
+                <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos_new/population_muted_explode.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </figure>
+                    <figure class="video-container">
+                        <div class="video-wrapper">
+                            <video controls autoplay loop muted>
+                                <source src="videos_new/population_muted_vanish.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </figure>
+                </div>
+
+                <div class="section-text" style="margin: 3rem 0;">
+                    <h4>Evolution with Interventions</h4>
+                    <p>The agents learn to maintain the population size for a range of target values and initial conditions</p>
+                </p>
                 </div>
                 <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
                     <figure class="video-container">
@@ -814,7 +847,7 @@
                             </video>
                         </div>
                         <figcaption class="video-description">
-                            <p>Behavior when the target living cell count is high. </p>
+                            <p>Behavior when the target population size is high. </p>
                         </figcaption>
                     </figure>
                     <figure class="video-container">
@@ -825,16 +858,18 @@
                             </video>
                         </div>
                         <figcaption class="video-description">
-                            <p>Behavior with an intermediate target living cell count. </p>
+                            <p>Behavior with an intermediate target population size. </p>
                         </figcaption>
                     </figure>
                 </div>
 
                 <div class="section-text" style="margin: 3rem 0;">
-                    <h4>Self-Sustaining Patterns</h4>
-                    <p>Interestingly, <b>the agents learn to construct self-sustaining patterns that have the desired amount of living cells.</b> 
+                    <h4>Discovery of Self-Sustaining Patterns</h4>
+                    <p>Interestingly, <b>the agents learn to construct self-sustaining patterns that have the desired size.</b> 
                         These patterns were not present in the initial states of training environments, and have been 
-                        fully discovered by the agents while interacting with the environemnt.</p>
+                        fully discovered by the agents while interacting with the environment. These promising results
+                    show that the proposed framework could be used to both explore and control CA and other complex systems
+                     with rich,unknown dynamics.</p>
                 </div>
 
                 <div class="video-grid" role="group" aria-label="Collection of Flow-Lenia demonstration videos">
@@ -861,6 +896,8 @@
                         </figcaption>
                     </figure>
                 </div>
+
+
 
                 <div style="height: 2rem;"></div>
 
